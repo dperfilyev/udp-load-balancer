@@ -74,7 +74,7 @@ void* run_resolver( void* call_arg )
                     addr_list += 1;
                 }
             } else {
-              servers_list_resolved_tmp[j] = servers_hosts[i];
+              servers_list_resolved_tmp[j] = strdup(servers_hosts[i]);
               servers_ports_resolved_tmp[j] = servers_ports[i];
               j++;
             }
