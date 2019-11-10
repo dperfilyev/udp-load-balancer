@@ -1,0 +1,1 @@
+*   run_resolver(): change servers_list_resolved only when IP adresses have changed for a server

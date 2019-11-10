@@ -1,15 +1,22 @@
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "udp_load_balancer.h"
 
 
-unsigned int is_help_required(int argc, char **argv) {
+unsigned int is_help_required_or_flags_set(int argc, char **argv) {
     unsigned int i;
     for (i = 0; i < argc; ++i)
     {
         if(strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
             return 1;
+        } else if ( strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--verbose") == 0) {
+            verb_flag = 1;
+        } else if ( strcmp(argv[i], "-d") == 0 || strcmp(argv[i], "--debug") == 0) {
+            verb_flag = 1;
+            debug_flag = 1;
         }
     }
 
@@ -100,14 +107,23 @@ char **get_servers_hosts(char **servers_list, int servers_amount) {
     return servers_hosts;
 }
 
+void free_servers_hosts(char **servers_hosts, int servers_amount) {
+    unsigned int i;
+    for(i = 0; i < servers_amount; i++) {
+        free(servers_hosts[i]);
+    }
+    free(servers_hosts);
+}
+
 int *get_servers_ports(char **servers_list, int servers_amount) {
-    char *server_raw, *port_string;
+    char *server_raw, *free_pointer, *port_string;
     int server_port;
     int *servers_ports = malloc(MAX_SERVERS * sizeof(int*));
 
     unsigned int i, j;
     for(i = 0; i < servers_amount; i++) {
-        server_raw = strdup(servers_list[i]);
+        free_pointer = strdup(servers_list[i]);
+        server_raw = free_pointer;
         strsep(&server_raw, ":");
         port_string = strsep(&server_raw, ":");
 
@@ -117,7 +133,12 @@ int *get_servers_ports(char **servers_list, int servers_amount) {
 	    }
 
         servers_ports[i] = server_port;
+        free(free_pointer);
     }
 
     return servers_ports;
+}
+
+void free_servers_ports(int *servers_ports, int servers_amount) {
+    free(servers_ports);
 }

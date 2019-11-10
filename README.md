@@ -8,10 +8,14 @@ Installation
 ------------
 Compile it with ``make build`` or ``make install`` if you want to place the generated binary in ``/usr/local/bin/``
 
+Features
+--------
+Support dynamic resolving of target servers in every 5 seconds. If subsequent resolv fails - use current servers until good resolv.
+
 Usage
 -----
 
-    udp_load_balancer [-h] [--port PORT] [--servers SERVERS]
+    udp_load_balancer [-hvd] [--port PORT] [--servers SERVERS]
     
     The options are as follows:
           -h, --help            show this help message and exit
@@ -23,3 +27,6 @@ Usage
                                 Servers list to balance the UDP messages
                                 Example: "127.0.0.1:8123, 127.0.0.1:8124"
                                 Example: "127.0.0.1:8123, localhost:8124, example.com:8123"
+          -v, --verbose         Be verbose
+          -d, --debug           Debug output enabled
+

@@ -14,7 +14,7 @@ int is_ip(char *address)
     return result != 0;
 }
 
-char *get_ip_from_hostname(char *hostname)
+char *get_one_ip_from_hostname(char *hostname)
 {
     struct hostent *he = gethostbyname(hostname);
 
@@ -27,4 +27,5 @@ char *get_ip_from_hostname(char *hostname)
 
     /* return the first one, because one host can have multiple addresses */
     return inet_ntoa(*addr_list[0]);
+
 }
