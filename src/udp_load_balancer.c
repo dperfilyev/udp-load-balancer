@@ -137,7 +137,6 @@ void* run_dispatcher( void* call_arg )
         if ( debug_flag ) printf("%s\n", srv );
         send_udp_packet(srv, port, message, message_length, arg->socket_);
         i++;
-        sleep(1);
     }
 }
 
