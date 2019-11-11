@@ -37,7 +37,6 @@ void* run_resolver( void* call_arg )
     servers_ports_resolved = NULL;
     int first_run = 1;
     unsigned int servers_amount_resolved_prev;
-    unsigned int n = 0;
     unsigned int servers_amount = get_servers_amount(servers_list);
     char **servers_hosts = get_servers_hosts(servers_list, servers_amount);
     int *servers_ports = get_servers_ports(servers_list, servers_amount);
@@ -46,11 +45,11 @@ void* run_resolver( void* call_arg )
         servers_amount_resolved_prev = servers_amount_resolved;
         servers_list_resolved_tmp = calloc(sizeof (char*), servers_amount); 
         servers_ports_resolved_tmp = calloc(sizeof (int), servers_amount); 
-        if ( verb_flag) printf("\n\nBalancing to servers:\n");
+        if ( verb_flag ) printf("\n\nBalancing to servers:\n");
         unsigned int i;
         unsigned int j = 0;
         for (i = 0; i < servers_amount; ++i) {
-            if ( verb_flag)   printf("  %s\n", servers_list[i]);
+            if ( verb_flag ) printf("  %s\n", servers_list[i]);
             if (is_ip(servers_hosts[i]) == 0) {
 
                 struct hostent *he = gethostbyname(servers_hosts[i]);
@@ -63,9 +62,9 @@ void* run_resolver( void* call_arg )
                 struct in_addr **addr_list = (struct in_addr **)he->h_addr_list;
 
                 while ( *addr_list ) {
-                    if ( j > servers_amount ) {
-                       servers_list_resolved_tmp = realloc(servers_list_resolved_tmp, sizeof (char*) * (j));
-                       servers_ports_resolved_tmp = realloc(servers_ports_resolved_tmp, sizeof (int) * (j));
+                    if ( j >= servers_amount ) {
+                       servers_list_resolved_tmp = realloc(servers_list_resolved_tmp, sizeof (char*) * (j+1));
+                       servers_ports_resolved_tmp = realloc(servers_ports_resolved_tmp, sizeof (int) * (j+1));
                     }
                     servers_list_resolved_tmp[j] = strdup(inet_ntoa(**addr_list));
                     servers_ports_resolved_tmp[j] = servers_ports[i];
@@ -74,6 +73,10 @@ void* run_resolver( void* call_arg )
                     addr_list += 1;
                 }
             } else {
+              if ( j >= servers_amount ) {
+                 servers_list_resolved_tmp = realloc(servers_list_resolved_tmp, sizeof (char*) * (j+1));
+                 servers_ports_resolved_tmp = realloc(servers_ports_resolved_tmp, sizeof (int) * (j+1));
+              }
               servers_list_resolved_tmp[j] = strdup(servers_hosts[i]);
               servers_ports_resolved_tmp[j] = servers_ports[i];
               j++;
@@ -94,7 +97,7 @@ void* run_resolver( void* call_arg )
         servers_ports_resolved_free = servers_ports_resolved;
         servers_ports_resolved = servers_ports_resolved_tmp;
         pthread_mutex_unlock(&resolv_mutex);
-        if ( debug_flag) {
+        if ( debug_flag ) {
           printf("servers_list_resolved array:\n");
           for ( j = 0 ; j < servers_amount_resolved ; j++ ) {
                printf(" (%u %s:%d)", j, servers_list_resolved_tmp[j], servers_ports_resolved_tmp[j]);
