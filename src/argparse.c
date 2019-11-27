@@ -14,6 +14,8 @@ unsigned int is_help_required_or_flags_set(int argc, char **argv) {
             return 1;
         } else if ( strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--verbose") == 0) {
             verb_flag = 1;
+        } else if ( strcmp(argv[i], "-V") == 0 || strcmp(argv[i], "--version") == 0) {
+            version_flag = 1;
         } else if ( strcmp(argv[i], "-d") == 0 || strcmp(argv[i], "--debug") == 0) {
             verb_flag = 1;
             debug_flag = 1;

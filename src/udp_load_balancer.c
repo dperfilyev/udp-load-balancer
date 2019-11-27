@@ -143,6 +143,10 @@ void* run_dispatcher( void* call_arg )
     }
 }
 
+void show_version() {
+    printf("udp_load_balancer %s\n",UDP_LOAD_BALANCER_VERSION);
+}
+
 void show_help() {
     printf("\n"
         "Usage: udp_load_balancer [-hvd] [--port PORT] [--servers SERVERS]\n"
@@ -157,6 +161,7 @@ void show_help() {
         "                            Servers list to balance the UDP messages\n"
         "                            Example: \"127.0.0.1:8123, localhost:8124, example.com:8123\"\n"
         "      -v, --verbose         Be verbose\n"
+        "      -V, --version         Show version\n"
         "      -d, --debug           Debug output enabled\n"
     );
 }
@@ -164,9 +169,15 @@ void show_help() {
 int main(int argc, char **argv)
 {
     verb_flag = 0;
+    version_flag = 0;
     debug_flag = 0;
     if (is_help_required_or_flags_set(argc, argv)) {
         show_help();
+        exit(0);
+    }
+
+    if ( version_flag ) {
+        show_version();
         exit(0);
     }
 
