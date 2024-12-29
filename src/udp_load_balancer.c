@@ -100,8 +100,7 @@ void* run_resolver( void* call_arg )
         if ( debug_flag ) {
           printf("servers_list_resolved array:\n");
           for ( j = 0 ; j < servers_amount_resolved ; j++ ) {
-               printf(" (%u %s:%d)", j, servers_list_resolved_tmp[j], servers_ports_resolved_tmp[j]);
-               printf("\n");
+               printf(" (%u %s:%d\n)", j, servers_list_resolved_tmp[j], servers_ports_resolved_tmp[j]);
           }
         }
         free_servers_hosts(servers_list_resolved_free,servers_amount_resolved_prev);
